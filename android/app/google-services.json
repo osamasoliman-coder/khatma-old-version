@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "489027733463",
+    "project_id": "khatma-1193a",
+    "storage_bucket": "khatma-1193a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:489027733463:android:9372a8b0c4dc015ec66d92",
+        "android_client_info": {
+          "package_name": "com.example.khatma"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "489027733463-oppc27hrckgv0b986ap5l883tqucp2jr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.khatma",
+            "certificate_hash": "38161f2012f78ec805acb2436caa73adfee87fab"
+          }
+        },
+        {
+          "client_id": "489027733463-0u5rbv5pq2gs3h5uk8a64afrlajnqedo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC4KJgaUtQhS_rIo-ceUfOnBhLZ92VNXuQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "489027733463-0u5rbv5pq2gs3h5uk8a64afrlajnqedo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

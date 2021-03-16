@@ -26,7 +26,7 @@ class Khatma extends StatelessWidget {
     return GetMaterialApp(
       initialBinding: Binding(),
       debugShowCheckedModeBanner: false,
-      home: homepage,
+      home: ControlView(),
     );
   }
 }

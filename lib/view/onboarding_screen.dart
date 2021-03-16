@@ -215,7 +215,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           onTap: ()async{
             var  pref = await SharedPreferences.getInstance();
             pref.setBool('is_seen',true);
-//            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login()));
+           // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Login()));
           Get.offAll(ControlView());
           },
           child:  FadeAnimation(

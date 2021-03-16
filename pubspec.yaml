@@ -34,11 +34,12 @@ dependencies:
   firebase_auth: "^0.20.0+1"
   flutter_facebook_login: ^3.0.0
   cloud_firestore: "^0.16.0"
+  firebase_messaging: ^8.0.0-dev.15
   uuid: ^2.2.2
   intl: ^0.16.1
   simple_animations: ^1.1.3
   page_transition: ^1.1.4
-  shared_preferences:
+  shared_preferences: 0.5.12+4
   flutter_svg:
   badges: ^1.1.6
   multi_select_flutter: ^3.1.8

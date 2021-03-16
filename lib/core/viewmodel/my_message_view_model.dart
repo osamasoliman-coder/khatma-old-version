@@ -11,8 +11,20 @@ class MyMessageViewModel extends GetxController {
 
   List<ChatListModel> get myChatList => _myChatList;
 
+  final List<ChatListModel> _list = [];
+
+  List<ChatListModel> get list => _list;
+
+  List<ChatListModel> _myList = [];
+
+  List<ChatListModel> get myList => _myList;
+
+  CollectionReference _chatList =
+      FirebaseFirestore.instance.collection('ChatList');
+
   MyMessageViewModel() {
     getAllMyMessages();
+    test2();
   }
 
   getAllMyMessages() async {
@@ -21,11 +33,10 @@ class MyMessageViewModel extends GetxController {
     ChatService().getMyChatList().then((value) {
       for (int i = 0; i < value.length; i++) {
         if (value[i].data()['senderId'] == _auth.currentUser.uid &&
-                value[i].data()['receiverId'] ==   value[i].data()['receiverId']) {
+            value[i].data()['receiverId'] == value[i].data()['receiverId']) {
           _myChatList.add(ChatListModel.fromJson(value[i].data()));
-        }
-        else if ( value[i].data()['receiverId'] == _auth.currentUser.uid &&
-            value[i].data()['senderId'] ==  value[i].data()['senderId']){
+        } else if (value[i].data()['receiverId'] == _auth.currentUser.uid &&
+            value[i].data()['senderId'] == value[i].data()['senderId']) {
           _myChatList.add(ChatListModel.fromJson(value[i].data()));
         }
       }
@@ -52,5 +63,29 @@ class MyMessageViewModel extends GetxController {
       }
     }
     print(list.length);
+  }
+
+  test2() async {
+    _myList.clear();
+    _list.clear();
+    _chatList.get().then((value) {
+      for (int i = 0; i < value.docs.length; i++) {
+        _list.add(ChatListModel.fromJson(value.docs[i].data()));
+      }
+      for (int i = 0; i < _list.length; i++) {
+     if (_list[i].receiverId == _auth.currentUser.uid){
+          _chatList
+              .doc(_list[i].senderId + _list[i].receiverId)
+              .get()
+              .then((value) {
+            _myList.add(ChatListModel.fromJson(value.data()));
+            update();
+          });
+        }
+      }
+      update();
+    });
+
+
   }
 }

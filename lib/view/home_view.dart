@@ -10,11 +10,29 @@ import 'package:khatma/core/viewmodel/khatma_chat_view_model.dart';
 import 'package:khatma/view/details_khatma.dart';
 import 'package:khatma/view/widget/custom_text.dart';
 import 'package:khatma/view/widget/custome_drawer.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import '../core/services/notification_service.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
+  @override
+  _HomeViewState createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   KhatmaChatViewModel khatmaChatViewModel = Get.put(KhatmaChatViewModel());
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseMessaging.instance
+        .getInitialMessage()
+        .then((RemoteMessage message) {
+      //TODO: handle message
+    });
+    FCM().doInitializeFCM();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,8 +116,7 @@ class HomeView extends StatelessWidget {
                                     ),
                                   ),
                                   child: CustomText(
-                                    text:
-                                        'Members      ',
+                                    text: 'Members      ',
                                     color: primaryColor,
                                     fontSize: 17,
                                   ),

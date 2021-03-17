@@ -19,7 +19,7 @@ class _MyChatViewState extends State<MyChatView> {
   Widget build(BuildContext context) {
     return GetBuilder<MyMessageViewModel>(
       init: MyMessageViewModel(),
-      builder: (controller) => (controller.myChatList.length == 0)
+      builder: (controller) => (controller.myList.length == 0)
           ? Center(
               child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -40,23 +40,23 @@ class _MyChatViewState extends State<MyChatView> {
               ],
             ))
           : ListView.builder(
-              itemCount: controller.myChatList.length,
+              itemCount: controller.myList.length,
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
                     if (_auth.currentUser.uid !=
-                        controller.myChatList[index].receiverId) {
+                        controller.myList[index].receiverId) {
                       //print("hi");
                       Get.off(MessageView(
-                          receiverId: controller.myChatList[index].receiverId,
+                          receiverId: controller.myList[index].receiverId,
                           receiverName:
-                              controller.myChatList[index].receiverName));
+                              controller.myList[index].receiverName));
                     }
                     if (_auth.currentUser.uid !=
-                        controller.myChatList[index].senderId) {
+                        controller.myList[index].senderId) {
                       Get.to(MessageView(
-                        receiverId: controller.myChatList[index].senderId,
-                        receiverName: controller.myChatList[index].senderName,
+                        receiverId: controller.myList[index].senderId,
+                        receiverName: controller.myList[index].senderName,
                       ));
                     }
                     //Get.to(MessageView())
@@ -92,13 +92,13 @@ class _MyChatViewState extends State<MyChatView> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       CustomText(
-                                        text: (controller.myChatList[index]
+                                        text: (controller.myList[index]
                                                     .receiverId ==
                                                 _auth.currentUser.uid)
                                             ? controller
-                                                .myChatList[index].senderName
+                                                .myList[index].senderName
                                             : controller
-                                                .myChatList[index].receiverName,
+                                                .myList[index].receiverName,
                                         fontSize: 19,
                                         color: Colors.deepOrange.shade500,
                                       ),
@@ -135,7 +135,7 @@ class _MyChatViewState extends State<MyChatView> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      controller.test();
+                                      controller.test2();
                                     },
                                     child: CustomText(
                                       text: "test",

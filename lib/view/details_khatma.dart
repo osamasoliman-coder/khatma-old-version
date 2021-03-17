@@ -238,6 +238,8 @@ class DetailsView extends StatelessWidget {
                         ],
                       )
                     : Container(),
+
+                (model.quran.length !=0) ?
                 GestureDetector(
                   onTap: (){
                     Get.to(QuranView(model: model,));
@@ -249,12 +251,12 @@ class DetailsView extends StatelessWidget {
                      borderRadius: BorderRadius.circular(10)
                    ),
                     child: CustomText(
-                      text: 'View Status',
+                      text: 'Booking',
                       fontSize: 20,
                       color: Colors.white,
                     ),
                   ),
-                ),
+                ) : Container(),
                 SizedBox(height: 10,),
                 GestureDetector(
                   onTap: (){
@@ -267,7 +269,7 @@ class DetailsView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10)
                     ),
                     child: CustomText(
-                      text: 'Not Reading',
+                      text: 'Status',
                       fontSize: 20,
                       color: Colors.white,
                     ),

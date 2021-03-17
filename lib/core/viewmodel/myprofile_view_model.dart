@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:khatma/model/khatma_model.dart';
 import 'package:khatma/model/my_werd_model.dart';
 
@@ -109,55 +110,235 @@ class MyProfileViewModel extends GetxController {
   }
 
   automationWerd(int index) async {
-    // for (int x = 0; x < _myKhatmaWithWerd[index].reserved.length; x++) {
-    //   if (_auth.currentUser.email ==
-    //       _myKhatmaWithWerd[index].reserved[x]['memberReservedEmail']) {
-    //     historyNew = _myKhatmaWithWerd[index].reserved[x];
-    //   }
-    // }
-    //
-    // //remove from reserved
-    // for (int z = 0; z < _myKhatmaWithWerd[index].reserved.length; z++) {
-    //   if (_myKhatmaWithWerd[index].reserved[z]['memberReservedEmail'] !=
-    //       _auth.currentUser.email) {
-    //     updateReserve.add(_myKhatmaWithWerd[index].reserved[z]);
-    //   }
-    // }
-    // _myKhatma
-    //     .doc(_myKhatmaWithWerd[index].khatmaId)
-    //     .update({'reserved': updateReserve});
-    //
-    // //add to history
-    // historyOld = _myKhatmaWithWerd[index].history;
-    // historyOld.add(historyNew);
-    // _myKhatma
-    //     .doc(_myKhatmaWithWerd[index].khatmaId)
-    //     .update({'history': historyOld});
+    List<Map> nextWerd = [];
+    List<int> connected = [];
+    List<Map> allReserved = [];
+    List<Map> history = [];
+    Map newHistory ={};
+    int c = 0;
+    var newa = [];
+    var m = 1;
+    var counter = List.filled(60, 0);
 
-    int lengthWerd = 1;
+      DateTime now = DateTime.now();
+      DateFormat formatter = DateFormat('yyyy-MM-dd');
+     String date = formatter.format(now);
 
-    //check to get new werd
-    for (int h = 0; h < _myKhatmaWithWerd[index].history.length; h++) {
+
+    //reserved with current user
+    for (int x = 0; x < _myKhatmaWithWerd[index].reserved.length; x++) {
       if (_auth.currentUser.email ==
-          _myKhatmaWithWerd[index].history[h]['memberReservedEmail']) {
-        for (int i = 0;
-            i < _myKhatmaWithWerd[index].history[h]['quran'].length;
-            i++) {
-          for (int a = 0; a < _myKhatmaWithWerd[index].allQuran.length; a++) {
-            if (_myKhatmaWithWerd[index].history[h]['quran'][i]['n'] ==
-                _myKhatmaWithWerd[index].allQuran[a]['n']) {
-              if (_myKhatmaWithWerd[index].history[h]['quran'][i]['n'] ==
-                  _myKhatmaWithWerd[index].history[h]['quran'][i]['n'] + 1 - 1) {
-                lengthWerd = _myKhatmaWithWerd[index].allQuran[a + 1]['n'];
-                print(_myKhatmaWithWerd[index].allQuran[lengthWerd]['quranAr']);
-                break;
-              }
-            }
-          }
+          _myKhatmaWithWerd[index].reserved[x]['memberReservedEmail']) {
+        historyNew = _myKhatmaWithWerd[index].reserved[x];
+      }
+    }
+
+    for (int i = 0; i < _myKhatmaWithWerd[index].reserved.length; i++) {
+      for (int x = 0;
+          x < _myKhatmaWithWerd[index].reserved[i]['quran'].length;
+          x++) {
+        if (_myKhatmaWithWerd[index].reserved[i]['memberReservedEmail'] ==
+            _auth.currentUser.email) {
+          connected.add(_myKhatmaWithWerd[index].reserved[i]['quran'][x]['n']);
         }
       }
     }
 
+    //change not reading
+    for(int x=0;x<_myKhatmaWithWerd[index].notReading.length;x++){
+    for (int i = 0; i < historyNew['quran'].length; i++) {
+        if(historyNew['quran'][i]['n'] == _myKhatmaWithWerd[index].notReading[x]['n']){
+          _myKhatmaWithWerd[index].notReading.remove(_myKhatmaWithWerd[index].notReading[x]);
+
+        }
+      }
+    }
+
+    _myKhatma
+        .doc(_myKhatmaWithWerd[index].khatmaId)
+        .update({'notReading': _myKhatmaWithWerd[index].notReading});
+
+    //add to history
+    for(int i=0;i<_myKhatmaWithWerd[index].history.length;i++){
+      if(_myKhatmaWithWerd[index].history.length>0){
+        history.add(_myKhatmaWithWerd[index].history[i]);
+      }
+    }
+
+
+    newHistory = {
+      'memberReservedEmail' : _auth.currentUser.email,
+      'memberReservedId' : _auth.currentUser.uid,
+      'date' : date,
+      'quran' : historyNew['quran']
+    };
+    history.add(newHistory);
+
+    _myKhatma
+        .doc(_myKhatmaWithWerd[index].khatmaId)
+        .update({'history': history});
+
+
+    connected.add(0);
+    for (int i = 0; i < connected.length - 1; i++) {
+      if (connected[i] < 60) {
+        if (connected[i] + 1 == connected[i + 1]) {
+          m++;
+          counter[c] = m;
+        } else if (i > 1 &&
+                connected[i - 1] + 1 != connected[i] &&
+                connected[i] + 1 != connected[i + 1] ||
+            connected[i] + 1 != connected[i + 1] && i == 0) {
+          newa.add(connected[i] + 1);
+          counter[c] = 1;
+          c++;
+        } else {
+          for (int x = 0; x < counter[c]; x++) {
+            newa.add(connected[i] + x + 1);
+          }
+          m = 1;
+          c++;
+        }
+      } else {
+        if (connected[i] + 1 == connected[i + 1]) {
+          m++;
+          counter[c] = m;
+        } else if (i > 1 &&
+                connected[i - 1] + 1 != connected[i] &&
+                connected[i] + 1 != connected[i + 1] ||
+            connected[i] + 1 != connected[i + 1] && i == 0) {
+          newa.add(60 - connected[i] + 1);
+          counter[c] = 1;
+          c++;
+        } else {
+          for (int x = 0; x < counter[c]; x++) {
+            newa.add(60 - connected[i] + x + 1);
+          }
+          m = 1;
+          c++;
+        }
+      }
+    }
+    m = 1;
+    c++;
+
+    for (int i = 0; i < _myKhatmaWithWerd[index].allQuran.length; i++) {
+      for (int x = 0; x < newa.length; x++) {
+        if (newa[x] == _myKhatmaWithWerd[index].allQuran[i]['n']) {
+          nextWerd.add(_myKhatmaWithWerd[index].allQuran[i]);
+        }
+      }
+    }
+
+    for (int z = 0; z < _myKhatmaWithWerd[index].reserved.length; z++) {
+      if (_myKhatmaWithWerd[index].reserved[z]['memberReservedEmail'] !=
+          _auth.currentUser.email) {
+        allReserved.add(_myKhatmaWithWerd[index].reserved[z]);
+      }
+    }
+    Map mm = {
+      'memberReservedEmail': _auth.currentUser.email,
+      'memberReservedId': _auth.currentUser.uid,
+      'quran': nextWerd
+    };
+    allReserved.add(mm);
+    _myKhatma
+        .doc(_myKhatmaWithWerd[index].khatmaId)
+        .update({'reserved': allReserved});
+
+
+    _myKhatmaWithWerd.clear();
+    getAllMyWerdFromMyKhatma();
     update();
+  }
+
+  t() {
+    int c = 0;
+    var newa = [];
+    var m = 1;
+    var counter = List.filled(60, 0);
+    var connected = [
+      43,
+      1,
+      2,
+      3,
+      4,
+      11,
+      12,
+      40,
+      50,
+      51,
+      52,
+      17,
+      18,
+      25,
+      26,
+      27,
+      28,
+      37,
+      57,
+      58,
+      59,
+    ];
+    connected.add(0);
+    for (int i = 0; i < connected.length - 1; i++) {
+      if (connected[i] < 59) {
+        if (connected[i] + 1 == connected[i + 1]) {
+          m++;
+          counter[c] = m;
+        } else if (i > 1 &&
+                connected[i - 1] + 1 != connected[i] &&
+                connected[i] + 1 != connected[i + 1] ||
+            connected[i] + 1 != connected[i + 1] && i == 0) {
+          newa.add(connected[i] + 1);
+          counter[c] = 1;
+          c++;
+        } else {
+          for (int x = 0; x < counter[c]; x++) {
+            newa.add(connected[i] + x + 1);
+          }
+          m = 1;
+          c++;
+        }
+      } else {
+        if (connected[i] + 1 == connected[i + 1]) {
+          m++;
+          counter[c] = m;
+        } else if (i > 1 &&
+                connected[i - 1] + 1 != connected[i] &&
+                connected[i] + 1 != connected[i + 1] ||
+            connected[i] + 1 != connected[i + 1] && i == 0) {
+          newa.add(59 - connected[i] + 1);
+          counter[c] = 1;
+          c++;
+        } else {
+          for (int x = 0; x < counter[c]; x++) {
+            newa.add(59 - connected[i] + x + 1);
+          }
+          m = 1;
+          c++;
+        }
+      }
+    }
+
+    for (int z = 0; z < newa.length; z++) {
+      print(newa[z]);
+    }
+    m = 1;
+    c++;
+  }
+
+  t2() {
+    List<int> all = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    List<int> res = [1, 2];
+
+    for (int i = 0; i < res.length; i++) {
+      if (all.contains(res[i])) {
+        all.remove(res[i]);
+      }
+    }
+    for (int i = 0; i < all.length; i++) {
+      print(all[i]);
+    }
   }
 }

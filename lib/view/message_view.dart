@@ -19,7 +19,7 @@ class _MessageViewState extends State<MessageView> {
   GlobalKey<FormState> _keyForm = GlobalKey<FormState>();
 
   TextEditingController messageText = TextEditingController();
-
+  final ScrollController _scrollController = ScrollController();
   FirebaseAuth _auth = FirebaseAuth.instance;
 
   // final CollectionReference _chatCollection =
@@ -139,6 +139,7 @@ class _MessageViewState extends State<MessageView> {
         ),
       ),
       body: Stack(
+        overflow: Overflow.visible,
         children: <Widget>[
           GetBuilder<MessageViewModel>(
             init: MessageViewModel(widget.receiverId),
